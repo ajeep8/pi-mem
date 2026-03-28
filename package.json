@@ -1,6 +1,6 @@
 {
   "name": "@askjo/pi-mem",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Pi coding agent extension for plain-Markdown memory system — long-term memory, daily logs, and scratchpad checklist",
   "main": "index.ts",
   "type": "module",
@@ -28,7 +28,9 @@
   },
   "homepage": "https://github.com/jo-inc/pi-mem#readme",
   "pi": {
-    "extensions": ["./index.ts"],
+    "extensions": [
+      "./index.ts"
+    ],
     "image": "https://raw.githubusercontent.com/jo-inc/pi-mem/main/logo.png"
   },
   "publishConfig": {
