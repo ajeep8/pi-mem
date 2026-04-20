@@ -48,11 +48,11 @@ Files in `notes/` and older daily logs are **not** injected — they're accessib
 
 ## Configuration
 
-Settings can be configured via environment variables or a `config.json` file in the memory directory. Environment variables take precedence over file values.
+Settings can be configured via environment variables or a `.pi-mem.json` file in the memory directory. Environment variables take precedence over file values.
 
-### config.json
+### .pi-mem.json
 
-Place a `config.json` in your memory directory (default `~/.pi/agent/memory/config.json`):
+Place a `.pi-mem.json` in your memory directory (default `~/.pi/agent/memory/.pi-mem.json`):
 
 ```json
 {
@@ -64,7 +64,7 @@ Place a `config.json` in your memory directory (default `~/.pi/agent/memory/conf
 
 ### Environment variables
 
-Environment variables override `config.json` values when set.
+Environment variables override `.pi-mem.json` values when set.
 
 | Env Var | Default | Description |
 |---------|---------|-------------|

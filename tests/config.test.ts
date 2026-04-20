@@ -80,9 +80,9 @@ describe("buildConfig", () => {
 		assert.deepStrictEqual(config.searchDirs, ["catchup", "projects"]);
 	});
 
-	it("reads config.json from memory dir", () => {
+	it("reads .pi-mem.json from memory dir", () => {
 		const memDir = makeTempDir();
-		writeFile(path.join(memDir, "config.json"), JSON.stringify({
+		writeFile(path.join(memDir, ".pi-mem.json"), JSON.stringify({
 			searchDirs: ["catchup", "projects"],
 			contextFiles: ["SOUL.md"],
 			autocommit: true,
@@ -94,9 +94,9 @@ describe("buildConfig", () => {
 		cleanup(memDir);
 	});
 
-	it("env vars override config.json values", () => {
+	it("env vars override .pi-mem.json values", () => {
 		const memDir = makeTempDir();
-		writeFile(path.join(memDir, "config.json"), JSON.stringify({
+		writeFile(path.join(memDir, ".pi-mem.json"), JSON.stringify({
 			searchDirs: ["catchup"],
 			contextFiles: ["SOUL.md"],
 			autocommit: true,
@@ -114,18 +114,18 @@ describe("buildConfig", () => {
 		cleanup(memDir);
 	});
 
-	it("ignores malformed config.json", () => {
+	it("ignores malformed .pi-mem.json", () => {
 		const memDir = makeTempDir();
-		writeFile(path.join(memDir, "config.json"), "not json{{");
+		writeFile(path.join(memDir, ".pi-mem.json"), "not json{{");
 		const config = buildConfig({ HOME: "/home/x", PI_MEMORY_DIR: memDir });
 		assert.deepStrictEqual(config.searchDirs, []);
 		assert.deepStrictEqual(config.contextFiles, []);
 		cleanup(memDir);
 	});
 
-	it("ignores config.json with wrong types", () => {
+	it("ignores .pi-mem.json with wrong types", () => {
 		const memDir = makeTempDir();
-		writeFile(path.join(memDir, "config.json"), JSON.stringify({
+		writeFile(path.join(memDir, ".pi-mem.json"), JSON.stringify({
 			searchDirs: "not-an-array",
 			contextFiles: 42,
 			autocommit: "yes",

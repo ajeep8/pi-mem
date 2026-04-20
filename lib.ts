@@ -30,7 +30,7 @@ export interface FileConfig {
 
 export function loadConfigFile(memoryDir: string): FileConfig {
 	try {
-		const raw = fs.readFileSync(path.join(memoryDir, "config.json"), "utf-8");
+		const raw = fs.readFileSync(path.join(memoryDir, ".pi-mem.json"), "utf-8");
 		const parsed = JSON.parse(raw);
 		if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) return {};
 		const result: FileConfig = {};
