@@ -1,4 +1,9 @@
 <p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" /></a>
+  <a href="https://www.npmjs.com/package/@askjo/pi-mem"><img src="https://img.shields.io/npm/v/@askjo/pi-mem" alt="npm version" /></a>
+  <a href="https://github.com/jo-inc/pi-mem/stargazers"><img src="https://img.shields.io/github/stars/jo-inc/pi-mem" alt="GitHub stars" /></a>
+</p>
+<p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="logo-dark.png" />
     <source media="(prefers-color-scheme: light)" srcset="logo.png" />
