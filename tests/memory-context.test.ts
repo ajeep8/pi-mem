@@ -123,6 +123,7 @@ describe("buildMemoryContext", () => {
 		const result = buildMemoryContext(config);
 		assert.ok(result.includes(`## Catchup: ${today} (today)`));
 		assert.ok(result.includes("Catchup summary for today"));
+		assert.ok(result.includes("memory_read"), "should include tool hint");
 	});
 
 	it("includes catchup INDEX.md for yesterday when it exists", () => {
@@ -153,6 +154,22 @@ describe("buildMemoryContext", () => {
 		const dailyIdx = result.indexOf("(today)");
 		const catchupIdx = result.indexOf("Catchup:");
 		assert.ok(dailyIdx < catchupIdx, "daily log should come before catchup");
+	});
+
+	it("truncates large catchup INDEX.md at ~2KB", () => {
+		const config = makeConfig(tmpDir);
+		ensureDirs(config);
+		const today = todayStr();
+		// Generate 50 lines of ~100 chars each = ~5KB
+		const lines = Array.from({ length: 50 }, (_, i) =>
+			`💬 Chat ${i} — ${"x".repeat(80)} <!-- file:chat_${i}.md -->`
+		).join("\n");
+		writeFile(`${config.memoryDir}/catchup/${today}/INDEX.md`, lines);
+		const result = buildMemoryContext(config);
+		assert.ok(result.includes("more entries"), "should show truncation notice");
+		assert.ok(result.includes("memory_read"), "truncation notice should mention memory_read");
+		// Should not contain the last entry
+		assert.ok(!result.includes("Chat 49"), "should not include last entries");
 	});
 
 	it("includes multiple context files in order", () => {

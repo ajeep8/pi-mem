@@ -47,6 +47,7 @@ import {
 	parseScratchpad,
 	serializeScratchpad,
 	buildMemoryContext,
+	safeResolvePath,
 	scanSession,
 	isHousekeeping,
 	searchMemory,
@@ -581,7 +582,7 @@ export default function (pi: ExtensionAPI) {
 			"- 'long_term': Read MEMORY.md",
 			"- 'scratchpad': Read SCRATCHPAD.md",
 			"- 'daily': Read a specific day's log (default: today). Pass date as YYYY-MM-DD.",
-			"- 'file': Read any file by name (e.g. 'SOUL.md'). Pass filename.",
+			"- 'file': Read any file by path (e.g. 'SOUL.md', 'catchup/2026-04-26/file.md'). Pass filename.",
 			"- 'note': Read a file from notes/ (e.g. 'lessons.md'). Pass filename.",
 			"- 'list': List all files in the memory directory.",
 		].join("\n"),
@@ -614,6 +615,13 @@ export default function (pi: ExtensionAPI) {
 					const dailyFiles = fs.readdirSync(config.dailyDir).filter(f => f.endsWith(".md")).sort().reverse();
 					if (dailyFiles.length > 0) sections.push(`Daily logs (${dailyFiles.length}):\n${dailyFiles.slice(0, 10).map(f => `- daily/${f}`).join("\n")}${dailyFiles.length > 10 ? `\n  ... and ${dailyFiles.length - 10} more` : ""}`);
 				} catch {}
+				try {
+					const catchupDir = path.join(config.memoryDir, "catchup");
+					const catchupDates = fs.readdirSync(catchupDir).filter(f => {
+						try { return fs.statSync(path.join(catchupDir, f)).isDirectory(); } catch { return false; }
+					}).sort().reverse();
+					if (catchupDates.length > 0) sections.push(`Catchup (${catchupDates.length} dates):\n${catchupDates.slice(0, 10).map(d => `- catchup/${d}/`).join("\n")}${catchupDates.length > 10 ? `\n  ... and ${catchupDates.length - 10} more` : ""}`);
+				} catch {}
 				if (sections.length === 0) {
 					return { content: [{ type: "text", text: "Memory directory is empty." }], details: {} };
 				}
@@ -624,13 +632,16 @@ export default function (pi: ExtensionAPI) {
 				if (!filename) {
 					return { content: [{ type: "text", text: "Error: 'filename' is required for target 'file'." }], details: {} };
 				}
-				const safe = path.basename(filename);
-				const filePath = path.join(config.memoryDir, safe);
-				const content = readFileSafe(filePath);
-				if (!content) {
-					return { content: [{ type: "text", text: `File not found: ${safe}` }], details: {} };
+				// Allow subdirectory paths (e.g. catchup/2026-04-26/file.md) with traversal protection
+				const result = safeResolvePath(config.memoryDir, filename);
+				if (!result) {
+					return { content: [{ type: "text", text: `Invalid path: ${filename}` }], details: {} };
 				}
-				return { content: [{ type: "text", text: content }], details: { path: filePath, filename: safe } };
+				const content = readFileSafe(result.resolved);
+				if (!content) {
+					return { content: [{ type: "text", text: `File not found: ${result.normalized}` }], details: {} };
+				}
+				return { content: [{ type: "text", text: content }], details: { path: result.resolved, filename: result.normalized } };
 			}
 
 			if (target === "note") {

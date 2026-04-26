@@ -109,6 +109,13 @@ export function dailyPath(dailyDir: string, date: string): string {
 	return path.join(dailyDir, `${date}.md`);
 }
 
+/** Validate and normalize a relative file path within the memory directory. Returns null if path escapes memoryDir. */
+export function safeResolvePath(memoryDir: string, filename: string): { resolved: string; normalized: string } | null {
+	const normalized = path.normalize(filename).replace(/^\/+/, "");
+	if (normalized.startsWith("..") || path.isAbsolute(filename)) return null;
+	return { resolved: path.join(memoryDir, normalized), normalized };
+}
+
 export function ensureDirs(config: MemoryConfig): void {
 	fs.mkdirSync(config.memoryDir, { recursive: true });
 	fs.mkdirSync(config.dailyDir, { recursive: true });
@@ -192,9 +199,28 @@ export function buildMemoryContext(config: MemoryConfig): string {
 	const catchupDir = path.join(config.memoryDir, "catchup");
 	for (const [date, label] of [[today, "today"], [yesterday, "yesterday"]] as const) {
 		const indexPath = path.join(catchupDir, date, "INDEX.md");
-		const catchupContent = readFileSafe(indexPath);
-		if (catchupContent?.trim()) {
-			sections.push(`## Catchup: ${date} (${label})\n\n${catchupContent.trim()}`);
+		let catchupContent = readFileSafe(indexPath)?.trim();
+		if (catchupContent) {
+			// Cap at ~2KB to prevent system prompt bloat on high-activity days
+			const MAX_CATCHUP_BYTES = 2048;
+			if (catchupContent.length > MAX_CATCHUP_BYTES) {
+				const lines = catchupContent.split("\n");
+				let truncated = "";
+				let kept = 0;
+				for (const line of lines) {
+					if (truncated.length + line.length + 1 > MAX_CATCHUP_BYTES) break;
+					truncated += (kept > 0 ? "\n" : "") + line;
+					kept++;
+				}
+				const remaining = lines.length - kept;
+				if (remaining > 0) {
+					truncated += `\n... (${remaining} more entries — use memory_read(target='file', filename='catchup/${date}/INDEX.md') to see all)`;
+				}
+				catchupContent = truncated;
+			}
+			const header = `## Catchup: ${date} (${label})`;
+			const hint = `_Read full details: memory_read(target='file', filename='catchup/${date}/FILENAME.md')_`;
+			sections.push(`${header}\n${hint}\n\n${catchupContent}`);
 		}
 	}
 
