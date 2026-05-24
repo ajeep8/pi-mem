@@ -47,7 +47,7 @@ import {
 	parseScratchpad,
 	serializeScratchpad,
 	buildMemoryContext,
-	safeResolvePath,
+	readMemoryFile,
 	scanSession,
 	isHousekeeping,
 	searchMemory,
@@ -584,7 +584,7 @@ export default function (pi: ExtensionAPI) {
 			"- 'long_term': Read MEMORY.md",
 			"- 'scratchpad': Read SCRATCHPAD.md",
 			"- 'daily': Read a specific day's log (default: today). Pass date as YYYY-MM-DD.",
-			"- 'file': Read any file by path (e.g. 'SOUL.md', 'catchup/2026-04-26/file.md'). Pass filename.",
+			"- 'file': Read any file by exact path (e.g. 'SOUL.md', 'catchup/2026-04-26/file.md'). Pass filename. If the exact file is missing and the directory has an INDEX.md with <!-- file:... --> entries, I resolve by title/query within that index.",
 			"- 'note': Read a file from notes/ (e.g. 'lessons.md'). Pass filename.",
 			"- 'list': List all files in the memory directory.",
 		].join("\n"),
@@ -598,6 +598,7 @@ export default function (pi: ExtensionAPI) {
 			filename: Type.Optional(
 				Type.String({ description: "Filename for 'file' target (e.g. 'lessons.md', 'SOUL.md')" }),
 			),
+
 		}),
 		async execute(_toolCallId, params, _signal, _onUpdate, _ctx) {
 			ensureDirs(config);
@@ -634,16 +635,8 @@ export default function (pi: ExtensionAPI) {
 				if (!filename) {
 					return { content: [{ type: "text", text: "Error: 'filename' is required for target 'file'." }], details: {} };
 				}
-				// Allow subdirectory paths (e.g. catchup/2026-04-26/file.md) with traversal protection
-				const result = safeResolvePath(config.memoryDir, filename);
-				if (!result) {
-					return { content: [{ type: "text", text: `Invalid path: ${filename}` }], details: {} };
-				}
-				const content = readFileSafe(result.resolved);
-				if (!content) {
-					return { content: [{ type: "text", text: `File not found: ${result.normalized}` }], details: {} };
-				}
-				return { content: [{ type: "text", text: content }], details: { path: result.resolved, filename: result.normalized } };
+				const result = readMemoryFile(config, filename);
+				return { content: [{ type: "text", text: result.text }], details: result.details };
 			}
 
 			if (target === "note") {
