@@ -396,7 +396,7 @@ export default function (pi: ExtensionAPI) {
 			"- Concrete review tasks, exercises to assign later, or questions to revisit \u2192 scratchpad tool.",
 			"- Longer study plans, spaced-review queues, or upcoming lesson plans \u2192 notes/review-plan.md via memory_write(target='note', filename='review-plan.md').",
 			"- Distilled summaries of any substantive discussion: origin/context, key points, final conclusion, decisions, unresolved questions, and next actions \u2192 notes/discussion-summaries.md via memory_write(target='note', filename='discussion-summaries.md').",
-			"- Meta-level discussions about this learning companion's design, prompt rules, implementation plans, and conclusions \u2192 notes/design-decisions.md via memory_write(target='note', filename='design-decisions.md')."
+			"- Meta-level discussions about this learning companion's design, prompt rules, implementation plans, and conclusions \u2192 notes/design-decisions.md via memory_write(target='note', filename='design-decisions.md').",
 			"",
 			"### Learning Companion Write Rules",
 			'- If the student says "remember this" or gives durable learning preferences, write it immediately.',
@@ -404,7 +404,7 @@ export default function (pi: ExtensionAPI) {
 			"- If the student struggles for a while and then understands a key point, gives a correct explanation in their own words, or fixes a misconception, append an entry to notes/breakthroughs.md. Include: key point, before/after understanding, anchor example.",
 			"- After meaningful learning interactions, call memory_write(target='daily') with a brief 2-4 bullet summary: topic, progress, remaining weakness, recommended next step.",
 			"- For any substantive discussion, ignore unimportant intermediate back-and-forth and append a distilled entry to notes/discussion-summaries.md. Preserve the reason the discussion started, key ideas considered, final conclusion, decisions made, unresolved questions, and next actions.",
-			"- Use scratchpad for concrete follow-ups only: exercises to do, concepts to review, or questions to revisit. Mark items done when completed."
+			"- Use scratchpad for concrete follow-ups only: exercises to do, concepts to review, or questions to revisit. Mark items done when completed.",
 			"- When the conversation discusses how this learning companion should work, what should be remembered, or implementation/prompt decisions, append the agreed plan and conclusion to notes/design-decisions.md.",
 			"- Prefer evidence-based notes over vague judgments. Do not label the student negatively; describe observed behavior and next actions.",
 			"- Skip logging for greetings, simple acknowledgements, or trivial factual answers unless they reveal a durable learning preference or misconception.",
@@ -413,7 +413,7 @@ export default function (pi: ExtensionAPI) {
 			"Weakness entry: `## Concept: <name>` then `Evidence:`, `Likely misconception:`, `Next practice:`.",
 			"Breakthrough entry: `## Breakthrough: <name>` then `Before:`, `After:`, `Anchor example:`.",
 			"Discussion summary entry: `## Discussion: <topic>` then `Origin:`, `Key points:`, `Conclusion:`, `Decisions:`, `Open questions:`, `Next actions:`. Omit empty sections.",
-			"Daily entry: `- Topic: ...` `- Progress: ...` `- Still weak: ...` `- Next: ...`."
+			"Daily entry: `- Topic: ...` `- Progress: ...` `- Still weak: ...` `- Next: ...`.",
 			"",
 			memoryContext,
 		].join("\n");
@@ -440,7 +440,7 @@ export default function (pi: ExtensionAPI) {
 			"Use memory_write immediately when the student asks you to remember something or reveals durable learning preferences.",
 			"Use memory_write target='daily' after meaningful study interactions to summarize topic, progress, remaining weakness, and next step.",
 			"Use memory_write target='note' filename='discussion-summaries.md' after substantive discussions to save the distilled origin, key points, conclusion, decisions, open questions, and next actions.",
-			"Use memory_write target='note' filename='weaknesses.md' for repeated confusions or error patterns, and filename='breakthroughs.md' for key understanding moments."}]}لوظائف.edit WRAP доп?= 0; [json] Haf (raw) = outputs? text = 
+			"Use memory_write target='note' filename='weaknesses.md' for repeated confusions or error patterns, and filename='breakthroughs.md' for key understanding moments.",
 			"Use memory_write target='note' filename='design-decisions.md' for meta-level learning companion design discussions, implementation plans, and conclusions.",
 		],
 		description: [
