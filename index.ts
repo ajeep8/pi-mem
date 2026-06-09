@@ -385,19 +385,30 @@ export default function (pi: ExtensionAPI) {
 		if (!memoryContext) return;
 
 		const memoryInstructions = [
-			"## Memory",
-			"The following memory files have been loaded. Use the memory_write tool to persist important information.",
-			"- Decisions, preferences, and durable facts \u2192 MEMORY.md",
-			"- Day-to-day notes and running context \u2192 daily/<YYYY-MM-DD>.md",
-			"- Things to fix later or keep in mind \u2192 scratchpad tool",
-			"- Scratchpad is NOT auto-loaded. Use memory_read(target='scratchpad') to fetch it when needed.",
-			'- If someone says "remember this," write it immediately.',
+			"## Learning Companion Memory",
+			"The following memory files have been loaded. Use the memory tools to become a better long-term learning companion for the student.",
 			"",
-			"### Daily Log Rule",
-			"After meaningful interactions, call memory_write(target='daily') with a brief 1-2 sentence summary.",
-			"**Log when:** task completed, decision made, bug fixed, new info discovered, config changed.",
-			"**Skip when:** greetings, goodbyes, chitchat, simple acks, trivial factual questions.",
-			"Log the outcome, not the question (e.g. \"Debugged import error \u2014 missing __init__.py\" not \"User asked about imports\").",
+			"### Memory File Map",
+			"- Stable student profile, goals, level, curriculum, exam dates, and explanation preferences \u2192 MEMORY.md via memory_write(target='long_term').",
+			"- Study-session progress, what was practiced, what improved, what remains unclear, and next step \u2192 daily/<YYYY-MM-DD>.md via memory_write(target='daily').",
+			"- Repeated confusions, weak concepts, error patterns, and suggested practice \u2192 notes/weaknesses.md via memory_write(target='note', filename='weaknesses.md').",
+			"- Moments where the student finally understands a key point, corrects a misconception, or explains it in their own words \u2192 notes/breakthroughs.md via memory_write(target='note', filename='breakthroughs.md').",
+			"- Concrete review tasks, exercises to assign later, or questions to revisit \u2192 scratchpad tool.",
+			"- Longer study plans, spaced-review queues, or upcoming lesson plans \u2192 notes/review-plan.md via memory_write(target='note', filename='review-plan.md').",
+			"",
+			"### Learning Companion Write Rules",
+			'- If the student says "remember this" or gives durable learning preferences, write it immediately.',
+			"- If the student asks the same/similar question repeatedly, hesitates on the same concept, or makes the same mistake pattern, append an entry to notes/weaknesses.md. Include: concept, evidence, likely misconception, suggested next practice.",
+			"- If the student struggles for a while and then understands a key point, gives a correct explanation in their own words, or fixes a misconception, append an entry to notes/breakthroughs.md. Include: key point, before/after understanding, anchor example.",
+			"- After meaningful learning interactions, call memory_write(target='daily') with a brief 2-4 bullet summary: topic, progress, remaining weakness, recommended next step.",
+			"- Use scratchpad for concrete follow-ups only: exercises to do, concepts to review, or questions to revisit. Mark items done when completed.",
+			"- Prefer evidence-based notes over vague judgments. Do not label the student negatively; describe observed behavior and next actions.",
+			"- Skip logging for greetings, simple acknowledgements, or trivial factual answers unless they reveal a durable learning preference or misconception.",
+			"",
+			"### Suggested Entry Formats",
+			"Weakness entry: `## Concept: <name>` then `Evidence:`, `Likely misconception:`, `Next practice:`.",
+			"Breakthrough entry: `## Breakthrough: <name>` then `Before:`, `After:`, `Anchor example:`.",
+			"Daily entry: `- Topic: ...` `- Progress: ...` `- Still weak: ...` `- Next: ...`.",
 			"",
 			memoryContext,
 		].join("\n");
@@ -419,10 +430,11 @@ export default function (pi: ExtensionAPI) {
 	pi.registerTool({
 		name: "memory_write",
 		label: "Memory Write",
-		promptSnippet: "Persist durable facts, daily progress, or named notes to Markdown memory files.",
+		promptSnippet: "Persist student profile, study progress, weak points, breakthroughs, or named learning notes.",
 		promptGuidelines: [
-			"Use memory_write immediately when the user asks you to remember something.",
-			"Use memory_write target='daily' after meaningful work to record a brief outcome summary.",
+			"Use memory_write immediately when the student asks you to remember something or reveals durable learning preferences.",
+			"Use memory_write target='daily' after meaningful study interactions to summarize topic, progress, remaining weakness, and next step.",
+			"Use memory_write target='note' filename='weaknesses.md' for repeated confusions or error patterns, and filename='breakthroughs.md' for key understanding moments.",
 		],
 		description: [
 			"Write to memory files. Three targets:",
@@ -522,9 +534,9 @@ export default function (pi: ExtensionAPI) {
 	pi.registerTool({
 		name: "scratchpad",
 		label: "Scratchpad",
-		promptSnippet: "Manage a persistent checklist of things to fix later or keep in mind.",
+		promptSnippet: "Manage a persistent checklist of review tasks, follow-up exercises, and questions to revisit.",
 		promptGuidelines: [
-			"Use scratchpad for temporary reminders, follow-up tasks, and items to fix later.",
+			"Use scratchpad for concrete learning follow-ups: exercises to assign later, concepts to review, and questions to revisit.",
 		],
 		description: [
 			"Manage a checklist of things to fix later or keep in mind. Actions:",
@@ -622,9 +634,9 @@ export default function (pi: ExtensionAPI) {
 	pi.registerTool({
 		name: "memory_read",
 		label: "Memory Read",
-		promptSnippet: "Read long-term memory, scratchpad, daily logs, notes, or arbitrary memory files.",
+		promptSnippet: "Read student profile, scratchpad, daily study logs, learning notes, or arbitrary memory files.",
 		promptGuidelines: [
-			"Use memory_read when you need authoritative current memory contents or a specific memory file.",
+			"Use memory_read when you need authoritative current learning memory, such as student profile, weaknesses, breakthroughs, or review plan.",
 		],
 		description: [
 			"Read a memory file. Targets:",
@@ -739,9 +751,9 @@ export default function (pi: ExtensionAPI) {
 	pi.registerTool({
 		name: "memory_search",
 		label: "Memory Search",
-		promptSnippet: "Keyword-search across Markdown memory files, daily logs, scratchpad, and notes.",
+		promptSnippet: "Keyword-search across student learning memory files, daily study logs, scratchpad, and notes.",
 		promptGuidelines: [
-			"Use memory_search to find past facts, decisions, notes, or daily log entries by keyword.",
+			"Use memory_search to find past weak points, breakthroughs, study topics, review tasks, or daily learning entries by keyword.",
 		],
 		description: [
 			"Search across all memory files (MEMORY.md, SCRATCHPAD.md, daily logs, notes/, and any other .md files).",
