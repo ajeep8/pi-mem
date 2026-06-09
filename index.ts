@@ -439,7 +439,7 @@ export default function (pi: ExtensionAPI) {
 		promptSnippet: "Persist student profile, study progress, weak points, breakthroughs, or named learning notes.",
 		promptGuidelines: [
 			"When using memory_write, write persisted memory content in Chinese.",
-			"Use memory_write immediately when the student asks you to remember something or reveals durable learning preferences."},{
+			"Use memory_write immediately when the student asks you to remember something or reveals durable learning preferences.",
 			"Use memory_write target='daily' after meaningful study interactions to summarize topic, progress, remaining weakness, and next step.",
 			"Use memory_write target='note' filename='discussion-summaries.md' after substantive discussions to save the distilled origin, key points, conclusion, decisions, open questions, and next actions.",
 			"Use memory_write target='note' filename='weaknesses.md' for repeated confusions or error patterns, and filename='breakthroughs.md' for key understanding moments.",
@@ -545,6 +545,7 @@ export default function (pi: ExtensionAPI) {
 		label: "Scratchpad",
 		promptSnippet: "Manage a persistent checklist of review tasks, follow-up exercises, and questions to revisit.",
 		promptGuidelines: [
+			"When using scratchpad, write persisted checklist items in Chinese.",
 			"Use scratchpad for concrete learning follow-ups: exercises to assign later, concepts to review, and questions to revisit.",
 		],
 		description: [
