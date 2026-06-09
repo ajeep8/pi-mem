@@ -399,6 +399,7 @@ export default function (pi: ExtensionAPI) {
 			"- Meta-level discussions about this learning companion's design, prompt rules, implementation plans, and conclusions \u2192 notes/design-decisions.md via memory_write(target='note', filename='design-decisions.md').",
 			"",
 			"### Learning Companion Write Rules",
+			"- Write all persisted memory content in Chinese. This applies to MEMORY.md, daily logs, notes/*.md, SCRATCHPAD.md, and any other files under the pi-mem memory directory.",
 			'- If the student says "remember this" or gives durable learning preferences, write it immediately.',
 			"- If the student asks the same/similar question repeatedly, hesitates on the same concept, or makes the same mistake pattern, append an entry to notes/weaknesses.md. Include: concept, evidence, likely misconception, suggested next practice.",
 			"- If the student struggles for a while and then understands a key point, gives a correct explanation in their own words, or fixes a misconception, append an entry to notes/breakthroughs.md. Include: key point, before/after understanding, anchor example.",
@@ -437,7 +438,8 @@ export default function (pi: ExtensionAPI) {
 		label: "Memory Write",
 		promptSnippet: "Persist student profile, study progress, weak points, breakthroughs, or named learning notes.",
 		promptGuidelines: [
-			"Use memory_write immediately when the student asks you to remember something or reveals durable learning preferences.",
+			"When using memory_write, write persisted memory content in Chinese.",
+			"Use memory_write immediately when the student asks you to remember something or reveals durable learning preferences."},{
 			"Use memory_write target='daily' after meaningful study interactions to summarize topic, progress, remaining weakness, and next step.",
 			"Use memory_write target='note' filename='discussion-summaries.md' after substantive discussions to save the distilled origin, key points, conclusion, decisions, open questions, and next actions.",
 			"Use memory_write target='note' filename='weaknesses.md' for repeated confusions or error patterns, and filename='breakthroughs.md' for key understanding moments.",
