@@ -386,6 +386,11 @@ export default function (pi: ExtensionAPI) {
 	pi.registerTool({
 		name: "memory_write",
 		label: "Memory Write",
+		promptSnippet: "Persist durable facts, daily progress, or named notes to Markdown memory files.",
+		promptGuidelines: [
+			"Use memory_write immediately when the user asks you to remember something.",
+			"Use memory_write target='daily' after meaningful work to record a brief outcome summary.",
+		],
 		description: [
 			"Write to memory files. Three targets:",
 			"- 'long_term': Write to MEMORY.md (curated durable facts, decisions, preferences). Mode: 'append' or 'overwrite'.",
@@ -484,6 +489,10 @@ export default function (pi: ExtensionAPI) {
 	pi.registerTool({
 		name: "scratchpad",
 		label: "Scratchpad",
+		promptSnippet: "Manage a persistent checklist of things to fix later or keep in mind.",
+		promptGuidelines: [
+			"Use scratchpad for temporary reminders, follow-up tasks, and items to fix later.",
+		],
 		description: [
 			"Manage a checklist of things to fix later or keep in mind. Actions:",
 			"- 'add': Add a new unchecked item (- [ ] text)",
@@ -580,6 +589,10 @@ export default function (pi: ExtensionAPI) {
 	pi.registerTool({
 		name: "memory_read",
 		label: "Memory Read",
+		promptSnippet: "Read long-term memory, scratchpad, daily logs, notes, or arbitrary memory files.",
+		promptGuidelines: [
+			"Use memory_read when you need authoritative current memory contents or a specific memory file.",
+		],
 		description: [
 			"Read a memory file. Targets:",
 			"- 'long_term': Read MEMORY.md",
@@ -693,6 +706,10 @@ export default function (pi: ExtensionAPI) {
 	pi.registerTool({
 		name: "memory_search",
 		label: "Memory Search",
+		promptSnippet: "Keyword-search across Markdown memory files, daily logs, scratchpad, and notes.",
+		promptGuidelines: [
+			"Use memory_search to find past facts, decisions, notes, or daily log entries by keyword.",
+		],
 		description: [
 			"Search across all memory files (MEMORY.md, SCRATCHPAD.md, daily logs, notes/, and any other .md files).",
 			"Matches filenames and file contents. Case-insensitive keyword search.",
