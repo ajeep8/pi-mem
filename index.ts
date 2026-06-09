@@ -31,6 +31,7 @@ import { StringEnum, completeSimple, getModel } from "@mariozechner/pi-ai";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { execFileSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 
 import {
 	type MemoryConfig,
@@ -53,6 +54,38 @@ import {
 	searchMemory,
 } from "./lib.ts";
 
+function expandEnvValue(value: string): string {
+	const home = process.env.HOME ?? "";
+	return value
+		.replace(/^~(?=\/|$)/, home)
+		.replace(/\$\{HOME\}/g, home)
+		.replace(/\$HOME/g, home);
+}
+
+function loadLocalEnv(): void {
+	const extensionDir = path.dirname(fileURLToPath(import.meta.url));
+	const envPath = path.join(extensionDir, ".env");
+	try {
+		const raw = fs.readFileSync(envPath, "utf-8");
+		for (const line of raw.split("\n")) {
+			const trimmed = line.trim();
+			if (!trimmed || trimmed.startsWith("#")) continue;
+			const match = trimmed.match(/^([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)$/);
+			if (!match) continue;
+			const key = match[1];
+			if (process.env[key] !== undefined) continue;
+			let value = match[2].trim();
+			if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+				value = value.slice(1, -1);
+			}
+			process.env[key] = expandEnvValue(value);
+		}
+	} catch {
+		// No local .env or unreadable file — keep normal environment/defaults.
+	}
+}
+
+loadLocalEnv();
 const config = buildConfig();
 
 function gitCommit(message: string) {
